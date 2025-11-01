@@ -1,39 +1,99 @@
-import "./styles.css";
-import trash from "../../assets/trash.svg";
-import { useState, useEffect, use } from "react";   
-import { db } from "../../firebase.js  ";
-import { collection, addDocs, deleteDoc, doc } from "firebase/firestore";
+import "./style.css";
+import trash from "../../assets/delete.png";
+import { useState, useEffect } from "react";   
+import { db } from "../../firebase.js";
+import { collection, addDoc, deleteDoc, doc, getDocs } from "firebase/firestore";
 
 export function Home() {
-  const [name, setname] = useState("");
-    const [age, setage] = useState("");
-    const [email, setemail] = useState("");
-    const [users, setusers] = useState([]);
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [email, setEmail] = useState("");
+  const [users, setUsers] = useState([]);
 
-    const usersCollectionRef = collection(db, "users");
-useEffect(() => {
-  const loadUsers = async () => {
-    const snapshot = await getDocs(usersCollection);
-    const usersList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-    setusers(usersList);
+  const usersCollectionRef = collection(db, "users");
+
+  useEffect(() => {
+    const loadUsers = async () => {
+      const snapshot = await getDocs(usersCollectionRef);
+      const usersList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setUsers(usersList);
     };
     loadUsers();
-}, []);
+  }, []);
 
-    const handleAddUser = async () => {
-      console.log("botao clicado");
-        await addDocs(usersCollectionRef, { name: name, age: Number(age), email: email });
-        if (name && age && email) return alert("preencha todos os campos");
-        const newUser = { name, age: Number(age), email };
-        setusers([...users, newUser]);
-        setname("");
-        setage("");
-        setemail("");
-    };
-    const handleDeleteUser = async (id) => {
-      const userDoc = doc(db, "users", id);
-      await deleteDoc(userDoc);
-      setusers(users.filter((user) => user.id !== id));
+  const handleAddUser = async () => {
+    if (!name || !age || !email) {
+      alert("Preencha todos os campos!");
+      return;
     }
-    return ( 
-        <div className="container"></div>)
+
+    const docRef = await addDoc(usersCollectionRef, {
+      name,
+      age: Number(age),
+      email,
+    });
+
+    setUsers([...users, { id: docRef.id, name, age: Number(age), email }]);
+    setName("");
+    setAge("");
+    setEmail("");
+  };
+
+  const handleDeleteUser = async (id) => {
+    const userDoc = doc(db, "users", id);
+    await deleteDoc(userDoc);
+    setUsers(users.filter((user) => user.id !== id));
+  };
+
+  return (
+    <div className="container">
+      <h1>Cadastro de Usuários</h1>
+      <div className="input-container">
+        <input
+          name="nome"
+          type="text"
+          placeholder="Nome"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <input
+          name="idade"
+          type="number"
+          placeholder="Idade"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
+
+      <button onClick={handleAddUser}>Adicionar</button>
+
+      <ul className="users-list">
+        {users.map((user) => (
+          <li key={user.id} className="user-item">
+            <div className="user-info">
+              <strong>{user.name}</strong> — {user.age} anos — {user.email}
+            </div>
+            <button
+              className="delete-btn"
+              onClick={() => handleDeleteUser(user.id)}
+              aria-label={`Excluir ${user.name}`}
+            >
+              <img src={trash} alt="Excluir" />
+            </button>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+} 
+export default Home;

@@ -49,50 +49,52 @@ export function Home() {
   };
 
   return (
-    <div className="container">
-      <h1>Cadastro de Usuários</h1>
-      <div className="input-container">
-        <input
-          name="nome"
-          type="text"
-          placeholder="Nome"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          name="idade"
-          type="number"
-          placeholder="Idade"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
-        <input
-          name="email"
-          type="email"
-          placeholder="E-mail"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+    <div className="tela"> 
+      <div className="container">
+        <h1>Cadastro de Usuários</h1>
+        <div className="input-container">
+          <input className="input"
+            name="nome"
+            type="text"
+            placeholder="Nome"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input className="input"
+            name="idade"
+            type="number"
+            placeholder="Idade"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
+          <input className="input"
+            name="email"
+            type="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+
+        <button onClick={handleAddUser}>Adicionar</button>
+
+        <ul className="users-list">
+          {users.map((user) => (
+            <li key={user.id} className="user-item">
+              <div className="user-info">
+                <strong>{user.name}</strong> — {user.age} anos — {user.email}
+              </div>
+              <button
+                className="delete-btn"
+                onClick={() => handleDeleteUser(user.id)}
+                aria-label={`Excluir ${user.name}`}
+              >
+                <img src={trash} alt="Excluir" />
+              </button>
+            </li>
+          ))}
+        </ul>
       </div>
-
-      <button onClick={handleAddUser}>Adicionar</button>
-
-      <ul className="users-list">
-        {users.map((user) => (
-          <li key={user.id} className="user-item">
-            <div className="user-info">
-              <strong>{user.name}</strong> — {user.age} anos — {user.email}
-            </div>
-            <button
-              className="delete-btn"
-              onClick={() => handleDeleteUser(user.id)}
-              aria-label={`Excluir ${user.name}`}
-            >
-              <img src={trash} alt="Excluir" />
-            </button>
-          </li>
-        ))}
-      </ul>
     </div>
   );
 } 

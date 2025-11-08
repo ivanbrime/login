@@ -2,14 +2,42 @@
     max-width: 400px;
     display: flex;
     background-color: #ffffff;
-    padding: 30px;
+    padding-bottom: 10px;
+    padding-top:10px;
+    padding-left: 15px;
+    padding-right: 15px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 50px;
     flex-direction: column ;
+    gap: 20px;
+
 }
 h1{
     text-align: center;
-    margin-bottom: 20px;
     color: #5b279b;
+}
+
+.tela{
+    background-color: aqua;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input-container{
+    display:flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.input{
+     all:unset;
+     background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    text-align: center;
+    border:2px solid #5b279b;
+    outline: 0;
+   
+
 }
